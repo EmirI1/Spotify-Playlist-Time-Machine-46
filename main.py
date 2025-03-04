@@ -1,28 +1,21 @@
 from bs4 import BeautifulSoup
 import requests
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 
-user_input = input("What year do you want to travel to? Type the date in this format YYYY-MM-DD: ")
+user_date_choice = input("What time period of songs do you want to go back to? Specify with format YYYY-MM-DD: ")
+
+API_ENDPOINT = f"https://www.billboard.com/charts/hot-100/{user_date_choice}"
+
 header = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:131.0) Gecko/20100101 Firefox/131.0"}
-base_url = "https://www.billboard.com/charts/hot-100/"
 
+response = requests.get(url=API_ENDPOINT, headers=header)
+response.raise_for_status()
 
-response = requests.get(url=f"{base_url}{user_input}/", headers=header)
-response.raise_for_status
-html_webpage = response.text
+soup = BeautifulSoup(response.text, "html.parser")
 
-soup = BeautifulSoup(html_webpage, "html.parser")
-web_scraped_song_names = soup.select("li ul li h3")
-
-lst_of_song_names = [song.getText().strip() for song in web_scraped_song_names]
-
-# Using spotipy for authenticating to the user 
-
-scope = "user-library-read"
+song_titles = soup.select("div ul li ul li h3#title-of-a-story") 
+list_of_song_names = []
+for song_name in song_titles:
+    list_of_song_names.append(song_name.get_text(strip=True))
 
 
 
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(scope=scope))
-results = sp.current_user_saved_tracks()
-print(results)

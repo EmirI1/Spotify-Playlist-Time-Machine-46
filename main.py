@@ -29,8 +29,8 @@ sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.environ.get("SPOTIPY
                                                redirect_uri=os.environ.get("SPOTIPY_REDIRECT_URI"),
                                                scope=spotipy_scope))
 
-user_info = sp.current_user()  # Get user details
-user_id = user_info["id"]  # Extract the user ID
+all_user_info = sp.current_user()  # Get user details
+user_id = all_user_info["id"]  # Extract the user ID
 # playlist_add_items(playlist_id, items, position=None)
 spotify_song_uri = []
 
@@ -48,11 +48,12 @@ for song in list_of_song_names:
         song_uris.append(uri)
     except:
         print(f"{song} cannot be found on spodify")
-print(len(song_uris))
 
 
 
 # TODO Make the paylist 
+playlist = sp.user_playlist_create(user_id, name=f"{user_date_choice} Billboard 100", public=False)
+
 
 # TODO Add every track to the playlist
 

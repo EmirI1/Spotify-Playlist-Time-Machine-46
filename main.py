@@ -50,10 +50,7 @@ for song in list_of_song_names:
         print(f"{song} cannot be found on spodify")
 
 
-
-# TODO Make the paylist 
-playlist = sp.user_playlist_create(user_id, name=f"{user_date_choice} Billboard 100", public=False)
+playlist = sp.user_playlist_create(user_id, name=f"{user_date_choice} Billboard 100", public=False) # Make the paylist 
 
 
-# TODO Add every track to the playlist
-
+sp.playlist_add_items(playlist_id=playlist["id"], items=song_uris, position=None) # Uses list song_uris list to get all the songs and adds to playlist
